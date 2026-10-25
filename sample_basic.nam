@@ -1,0 +1,63 @@
+# NS2 Sample NAM Trace File: Simple 3-Node Network
+# Topology: n0 ---- n1 ---- n2
+V -t * -v 1.0a5 -a 0
+c -t * -i 1 -n blue
+c -t * -i 2 -n green
+
+# Nodes
+n -t * -s 0 -x 100 -y 250 -Z 0 -v circle -c black
+n -t * -s 1 -x 350 -y 250 -Z 0 -v circle -c black
+n -t * -s 2 -x 600 -y 250 -Z 0 -v circle -c black
+
+# Links
+l -t * -s 0 -d 1 -S UP -r 1000000 -D 0.02
+l -t * -s 1 -d 0 -S UP -r 1000000 -D 0.02
+l -t * -s 1 -d 2 -S UP -r 1000000 -D 0.02
+l -t * -s 2 -d 1 -S UP -r 1000000 -D 0.02
+
+# Traffic Events: Packet 0 from node 0 to node 2 via node 1
++ -t 1.000 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 0 -a 0
+- -t 1.005 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 0 -a 0
+r -t 1.025 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 0 -a 0
++ -t 1.025 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 0 -a 0
+- -t 1.030 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 0 -a 0
+r -t 1.050 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 0 -a 0
+
+# Packet 1
++ -t 1.100 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 1 -a 0
+- -t 1.105 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 1 -a 0
+r -t 1.125 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 1 -a 0
++ -t 1.125 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 1 -a 0
+- -t 1.130 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 1 -a 0
+r -t 1.150 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 1 -a 0
+
+# Packet 2 with return ACK
++ -t 1.200 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 2 -a 0
+- -t 1.205 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 2 -a 0
+r -t 1.225 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 2 -a 0
++ -t 1.225 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 2 -a 0
+- -t 1.230 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 2 -a 0
+r -t 1.250 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 2 -a 0
+
+# ACK 2 returned from node 2 to node 0
++ -t 1.260 -s 2 -d 1 -p ack -e 40 -c 2 -i 102 -a 0
+- -t 1.261 -s 2 -d 1 -p ack -e 40 -c 2 -i 102 -a 0
+r -t 1.281 -s 2 -d 1 -p ack -e 40 -c 2 -i 102 -a 0
++ -t 1.281 -s 1 -d 0 -p ack -e 40 -c 2 -i 102 -a 0
+- -t 1.282 -s 1 -d 0 -p ack -e 40 -c 2 -i 102 -a 0
+r -t 1.302 -s 1 -d 0 -p ack -e 40 -c 2 -i 102 -a 0
+
+# Packet 3 (simulating a drop at node 1)
++ -t 1.350 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 3 -a 0
+- -t 1.355 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 3 -a 0
+r -t 1.375 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 3 -a 0
++ -t 1.375 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 3 -a 0
+d -t 1.380 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 3 -a 0
+
+# Packet 4
++ -t 1.450 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 4 -a 0
+- -t 1.455 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 4 -a 0
+r -t 1.475 -s 0 -d 1 -p cbr -e 1000 -c 1 -i 4 -a 0
++ -t 1.475 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 4 -a 0
+- -t 1.480 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 4 -a 0
+r -t 1.500 -s 1 -d 2 -p cbr -e 1000 -c 1 -i 4 -a 0

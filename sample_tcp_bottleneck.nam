@@ -1,0 +1,108 @@
+# NS2 Sample NAM Trace File: Dumbbell Network Topology with Bottleneck Link
+# Nodes:
+#   n0 (TCP Source 1) \
+#                      n2 (Router / Bottleneck) ---- n3 (Sink / Receiver)
+#   n1 (TCP Source 2) /
+V -t * -v 1.0a5 -a 0
+c -t * -i 1 -n red
+c -t * -i 2 -n blue
+c -t * -i 3 -n green
+c -t * -i 4 -n orange
+
+# Node layout
+n -t * -s 0 -x 150 -y 150 -Z 0 -v circle -c red -l "n0 (Client 1)"
+n -t * -s 1 -x 150 -y 450 -Z 0 -v circle -c blue -l "n1 (Client 2)"
+n -t * -s 2 -x 450 -y 300 -Z 0 -v circle -c black -l "n2 (Router)"
+n -t * -s 3 -x 800 -y 300 -Z 0 -v circle -c green -l "n3 (Server)"
+
+# Links (High speed access links 0->2 and 1->2, slow bottleneck link 2->3)
+l -t * -s 0 -d 2 -S UP -r 10000000 -D 0.005
+l -t * -s 2 -d 0 -S UP -r 10000000 -D 0.005
+l -t * -s 1 -d 2 -S UP -r 10000000 -D 0.005
+l -t * -s 2 -d 1 -S UP -r 10000000 -D 0.005
+l -t * -s 2 -d 3 -S UP -r 1000000 -D 0.03
+l -t * -s 3 -d 2 -S UP -r 1000000 -D 0.03
+
+# Flow 1 (Red TCP from n0 to n3) & Flow 2 (Blue TCP from n1 to n3)
+# Burst 1 from n0
++ -t 0.100 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 1 -a 1
+- -t 0.101 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 1 -a 1
+r -t 0.106 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 1 -a 1
++ -t 0.106 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 1 -a 1
+- -t 0.107 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 1 -a 1
+r -t 0.137 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 1 -a 1
+
+# Reverse ACK 1 from n3 to n0
++ -t 0.138 -s 3 -d 2 -p ack -e 40 -c 3 -i 1001 -a 1
+- -t 0.139 -s 3 -d 2 -p ack -e 40 -c 3 -i 1001 -a 1
+r -t 0.169 -s 3 -d 2 -p ack -e 40 -c 3 -i 1001 -a 1
++ -t 0.169 -s 2 -d 0 -p ack -e 40 -c 3 -i 1001 -a 1
+- -t 0.170 -s 2 -d 0 -p ack -e 40 -c 3 -i 1001 -a 1
+r -t 0.175 -s 2 -d 0 -p ack -e 40 -c 3 -i 1001 -a 1
+
+# Flow 2 starts from n1
++ -t 0.150 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 2 -a 2
+- -t 0.151 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 2 -a 2
+r -t 0.156 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 2 -a 2
++ -t 0.156 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 2 -a 2
+- -t 0.158 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 2 -a 2
+r -t 0.188 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 2 -a 2
+
+# n0 sends window of 2 packets (cwnd=2)
++ -t 0.180 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 3 -a 1
+- -t 0.181 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 3 -a 1
+r -t 0.186 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 3 -a 1
+
++ -t 0.182 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 4 -a 1
+- -t 0.183 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 4 -a 1
+r -t 0.188 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 4 -a 1
+
+# Router forwards packet 3
++ -t 0.186 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 3 -a 1
+- -t 0.189 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 3 -a 1
+r -t 0.219 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 3 -a 1
+
+# Router forwards packet 4
++ -t 0.188 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 4 -a 1
+- -t 0.220 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 4 -a 1
+r -t 0.250 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 4 -a 1
+
+# Heavy burst creates bottleneck congestion at n2
++ -t 0.240 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 5 -a 1
+- -t 0.241 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 5 -a 1
+r -t 0.246 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 5 -a 1
+
++ -t 0.242 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 6 -a 2
+- -t 0.243 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 6 -a 2
+r -t 0.248 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 6 -a 2
+
++ -t 0.244 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 7 -a 1
+- -t 0.245 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 7 -a 1
+r -t 0.250 -s 0 -d 2 -p tcp -e 1040 -c 1 -i 7 -a 1
+
++ -t 0.246 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 8 -a 2
+- -t 0.247 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 8 -a 2
+r -t 0.252 -s 1 -d 2 -p tcp -e 1040 -c 2 -i 8 -a 2
+
+# Queue buffer limit reached at n2! Drops occur
++ -t 0.246 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 5 -a 1
+- -t 0.251 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 5 -a 1
+r -t 0.281 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 5 -a 1
+
++ -t 0.248 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 6 -a 2
+d -t 0.252 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 6 -a 2
+
++ -t 0.250 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 7 -a 1
+d -t 0.253 -s 2 -d 3 -p tcp -e 1040 -c 1 -i 7 -a 1
+
++ -t 0.252 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 8 -a 2
+- -t 0.282 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 8 -a 2
+r -t 0.312 -s 2 -d 3 -p tcp -e 1040 -c 2 -i 8 -a 2
+
+# Server ACKs received packets
++ -t 0.283 -s 3 -d 2 -p ack -e 40 -c 3 -i 1005 -a 1
+- -t 0.284 -s 3 -d 2 -p ack -e 40 -c 3 -i 1005 -a 1
+r -t 0.314 -s 3 -d 2 -p ack -e 40 -c 3 -i 1005 -a 1
++ -t 0.314 -s 2 -d 0 -p ack -e 40 -c 3 -i 1005 -a 1
+- -t 0.315 -s 2 -d 0 -p ack -e 40 -c 3 -i 1005 -a 1
+r -t 0.320 -s 2 -d 0 -p ack -e 40 -c 3 -i 1005 -a 1

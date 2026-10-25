@@ -1,0 +1,38 @@
+# NS2 Sample NAM Trace File: 5-Node Mesh without explicit coordinates
+# Tests auto-layout engine
+V -t * -v 1.0a5 -a 0
+c -t * -i 1 -n red
+c -t * -i 2 -n blue
+
+# Nodes without coordinates
+n -t * -s 0 -v circle -c black
+n -t * -s 1 -v circle -c black
+n -t * -s 2 -v circle -c black
+n -t * -s 3 -v circle -c black
+n -t * -s 4 -v circle -c black
+
+# Links forming a ring with a cross-chord
+l -t * -s 0 -d 1 -S UP -r 2Mb -D 10ms
+l -t * -s 1 -d 2 -S UP -r 2Mb -D 10ms
+l -t * -s 2 -d 3 -S UP -r 2Mb -D 10ms
+l -t * -s 3 -d 4 -S UP -r 2Mb -D 10ms
+l -t * -s 4 -d 0 -S UP -r 2Mb -D 10ms
+l -t * -s 0 -d 2 -S UP -r 2Mb -D 10ms
+l -t * -s 1 -d 3 -S UP -r 2Mb -D 10ms
+
+# Traffic around the ring
++ -t 0.500 -s 0 -d 1 -p cbr -e 500 -c 1 -i 1 -a 1
+- -t 0.502 -s 0 -d 1 -p cbr -e 500 -c 1 -i 1 -a 1
+r -t 0.512 -s 0 -d 1 -p cbr -e 500 -c 1 -i 1 -a 1
+
++ -t 0.512 -s 1 -d 2 -p cbr -e 500 -c 1 -i 1 -a 1
+- -t 0.514 -s 1 -d 2 -p cbr -e 500 -c 1 -i 1 -a 1
+r -t 0.524 -s 1 -d 2 -p cbr -e 500 -c 1 -i 1 -a 1
+
++ -t 0.524 -s 2 -d 3 -p cbr -e 500 -c 1 -i 1 -a 1
+- -t 0.526 -s 2 -d 3 -p cbr -e 500 -c 1 -i 1 -a 1
+r -t 0.536 -s 2 -d 3 -p cbr -e 500 -c 1 -i 1 -a 1
+
++ -t 0.536 -s 3 -d 4 -p cbr -e 500 -c 1 -i 1 -a 1
+- -t 0.538 -s 3 -d 4 -p cbr -e 500 -c 1 -i 1 -a 1
+r -t 0.548 -s 3 -d 4 -p cbr -e 500 -c 1 -i 1 -a 1
